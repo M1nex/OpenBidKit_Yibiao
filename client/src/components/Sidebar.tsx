@@ -1,10 +1,9 @@
 import * as Tooltip from '@radix-ui/react-tooltip';
-import { useEffect, useState, type ComponentType, type ReactElement, type SVGProps } from 'react';
+import { useState, type ComponentType, type ReactElement, type SVGProps } from 'react';
 import { getAppMenuItems, getParentMenuItemBySection } from '../app/menuConfig';
 import type { AppMenuItem, SectionId } from '../shared/types/navigation';
-import { AppDialog, useNoticeToast } from '../shared/ui';
+import { useNoticeToast } from '../shared/ui';
 import logoUrl from '../../assets/icon_256.png';
-import groupChatQrUrl from '../../assets/group-chat-qr.png';
 
 interface SidebarProps {
   activeSection: SectionId;
@@ -40,38 +39,11 @@ const navigationIcons: Record<SectionId, ComponentType<SVGProps<SVGSVGElement>>>
   settings: GearIcon,
 };
 
-const USER_GUIDE_URL = 'https://wiki.agnet.top/';
-const SYSTEM_SETTINGS_URL = 'https://analytics.agnet.top/system-settings';
-
 function Sidebar({ activeSection, developerMode, onSectionChange }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
-  const [groupChatOpen, setGroupChatOpen] = useState(false);
-  const [groupChatQrSource, setGroupChatQrSource] = useState(groupChatQrUrl);
   const showNotice = useNoticeToast();
   const menuItems = getAppMenuItems(developerMode);
   const activeParent = getParentMenuItemBySection(activeSection, developerMode);
-
-  useEffect(() => {
-    let active = true;
-
-    // 远程二维码完整加载后再替换，查询或图片失败时继续使用内置图片。
-    void fetch(SYSTEM_SETTINGS_URL)
-      .then((response) => response.ok ? response.json() : null)
-      .then((data) => new Promise<string>((resolve, reject) => {
-        const url = String(data?.settings?.groupChatQrUrl || '');
-        if (!url) return reject();
-        const image = new Image();
-        image.onload = () => resolve(url);
-        image.onerror = reject;
-        image.src = url;
-      }))
-      .then((url) => {
-        if (active) setGroupChatQrSource(url);
-      })
-      .catch(() => undefined);
-
-    return () => { active = false; };
-  }, []);
 
   const handleMenuItemClick = (item: AppMenuItem) => {
     if (!item.notice) {
@@ -133,37 +105,10 @@ function Sidebar({ activeSection, developerMode, onSectionChange }: SidebarProps
       </nav>
 
       <div className="sidebar-footer">
-        <div className="sidebar-footer-shortcuts">
-          {collapsed ? wrapTooltip('使用文档', renderUserGuideButton()) : renderUserGuideButton()}
-          {collapsed ? wrapTooltip('加群', renderGroupChatButton(() => setGroupChatOpen(true))) : renderGroupChatButton(() => setGroupChatOpen(true))}
-        </div>
         {collapsed ? wrapTooltip('设置', renderSettingsButton(activeSection, onSectionChange)) : renderSettingsButton(activeSection, onSectionChange)}
       </div>
-
-      <AppDialog
-        open={groupChatOpen}
-        onOpenChange={setGroupChatOpen}
-        kicker="用户交流"
-        title="扫码加入交流群"
-        description="使用微信扫描下方二维码，加入易标用户交流群。"
-        cardClassName="group-chat-dialog"
-        actions={<button type="button" className="secondary-action" onClick={() => setGroupChatOpen(false)}>关闭</button>}
-      >
-        <img className="group-chat-qr" src={groupChatQrSource} alt="易标用户交流群二维码" />
-      </AppDialog>
     </aside>
   );
-}
-
-async function openExternalUrl(url: string) {
-  if (!url) return;
-
-  if (window.yibiao?.openExternal) {
-    await window.yibiao.openExternal(url);
-    return;
-  }
-
-  window.open(url, '_blank', 'noopener,noreferrer');
 }
 
 function renderSettingsButton(activeSection: SectionId, onSectionChange: (section: SectionId) => void) {
@@ -183,42 +128,6 @@ function renderSettingsButton(activeSection: SectionId, onSectionChange: (sectio
       <span className="settings-copy">
         <strong>设置</strong>
         <small>模型与解析配置</small>
-      </span>
-    </button>
-  );
-}
-
-function renderUserGuideButton() {
-  return (
-    <button
-      type="button"
-      className="settings-trigger sidebar-footer-shortcut"
-      onClick={() => void openExternalUrl(USER_GUIDE_URL)}
-      aria-label="使用文档"
-    >
-      <span className="nav-icon" aria-hidden="true">
-        <BookIcon />
-      </span>
-      <span className="settings-copy">
-        <strong>文档</strong>
-      </span>
-    </button>
-  );
-}
-
-function renderGroupChatButton(onClick: () => void) {
-  return (
-    <button
-      type="button"
-      className="settings-trigger sidebar-footer-shortcut"
-      onClick={onClick}
-      aria-label="加群"
-    >
-      <span className="nav-icon" aria-hidden="true">
-        <GroupChatIcon />
-      </span>
-      <span className="settings-copy">
-        <strong>加群</strong>
       </span>
     </button>
   );
@@ -356,27 +265,6 @@ function PluginIcon(props: SVGProps<SVGSVGElement>) {
       <path d="M16 3v5" />
       <path d="M6 8h12v2a6 6 0 0 1-12 0z" />
       <path d="M12 16v5" />
-    </svg>
-  );
-}
-
-function BookIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...props}>
-      <path d="M5.5 4.5h5.2c1.25 0 2.3 1.05 2.3 2.3v12.7c-.45-.8-1.25-1.3-2.3-1.3H5.5z" />
-      <path d="M18.5 4.5h-5.2C12.05 4.5 11 5.55 11 6.8v12.7c.45-.8 1.25-1.3 2.3-1.3h5.2z" />
-      <path d="M8 8h2" />
-      <path d="M14 8h2" />
-    </svg>
-  );
-}
-
-function GroupChatIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M4.5 5.5h12v9H9l-4.5 3v-3z" />
-      <path d="M16.5 9.5h3v7h-2v2l-3.2-2H12" />
-      <path d="M8 9h.01M12 9h.01" />
     </svg>
   );
 }
