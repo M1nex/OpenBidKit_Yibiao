@@ -123,7 +123,7 @@ function restorationInstructions(control, existingTotalWords) {
 
 // 每轮新目标更新输入快照；暂停恢复不重写，已有小节 HTML 和图片始终保留。
 function buildContentGenerationFiles({ outline, targets, plans, sectionStates = {}, projectOverview, globalFacts, globalFactsMode, wordControl, generationOptions, hasOriginalPlan, restoredContents, existingTotalWords, requirement, template, knowledgeBaseService, documentIds, checkTotalWords = true }) {
-  if (!template) throw new Error('请先在“长嘛样”选择有效的正文模板');
+  if (!template) throw new Error('请先在“长啥样”选择有效的正文模板');
   const targetIds = new Set(targets.map(({ item }) => item.id));
   const sections = [];
   const completedSections = [];

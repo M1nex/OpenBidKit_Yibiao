@@ -478,7 +478,7 @@ function ContentEditPage({
     }
   };
 
-  // 新建正文会话前确认“长嘛样”中保存的模板仍然存在。
+  // 新建正文会话前确认“长啥样”中保存的模板仍然存在。
   const ensureValidContentTemplate = async () => {
     const template = exportTemplateId ? await window.yibiao?.templates.get(exportTemplateId) : null;
     if (template) return true;
@@ -962,7 +962,7 @@ function ContentEditPage({
         onOpenChange={setTemplateRequiredDialogOpen}
         kicker="正文生成"
         title="未选择有效的正文模板"
-        description="正文生成前，请先在 STEP 02“长嘛样”中选择有效的正文模板。"
+        description="正文生成前，请先在 STEP 02“长啥样”中选择有效的正文模板。"
         actions={(
           <button
             type="button"

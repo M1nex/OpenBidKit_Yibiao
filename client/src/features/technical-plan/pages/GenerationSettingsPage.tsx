@@ -57,7 +57,7 @@ const tabs: Array<{ id: GenerationSettingsTab; label: string }> = [
   { id: 'length', label: '写多少' },
   { id: 'illustration', label: '插图吗' },
   { id: 'writing', label: '怎么写' },
-  { id: 'appearance', label: '长嘛样' },
+  { id: 'appearance', label: '长啥样' },
 ];
 const emptyKnowledgeIndex: KnowledgeBaseIndex = { folders: [], documents: [] };
 

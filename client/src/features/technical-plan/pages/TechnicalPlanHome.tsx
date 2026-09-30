@@ -734,11 +734,11 @@ function TechnicalPlanHome({ registerLeaveGuard }: TechnicalPlanHomeProps) {
     if (pending) void window.yibiao?.export.cancelWordConfirmation(pending.requestId);
   };
 
-  // 使用“长嘛样”保存的模板直接导出，不再临时改选。
+  // 使用“长啥样”保存的模板直接导出，不再临时改选。
   const exportWordWithConfiguredTemplate = async () => {
     const templateId = state.exportTemplateId.trim();
     if (!templateId) {
-      showToast('请先到生成设置的“长嘛样”选择导出模板', 'info');
+      showToast('请先到生成设置的“长啥样”选择导出模板', 'info');
       return;
     }
     await runExportWord();

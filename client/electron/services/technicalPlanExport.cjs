@@ -48,7 +48,7 @@ function createTechnicalPlanExport({ technicalPlanStore, templateStore, agentSer
       const state = technicalPlanStore.loadTechnicalPlan();
       if (!state.outlineData?.outline?.length) throw new Error('没有可导出的目录内容');
       const template = templateStore.getTemplate(state.exportTemplateId);
-      if (!template) throw new Error('请先到“长嘛样”选择有效的导出模板');
+      if (!template) throw new Error('请先到“长啥样”选择有效的导出模板');
       const task = agentService.loadPersistentTask(CONTENT_GENERATION_AGENT_TASK_KEY);
       return {
         project_name: state.outlineData.project_name,
