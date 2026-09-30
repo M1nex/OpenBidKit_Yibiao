@@ -8,6 +8,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently -k -n vite,electron -c blue,magenta \"vite --host 127.0.0.1 --port 5173 --strictPort\" \"wait-on http://127.0.0.1:5173 && cross-env ELECTRON_RENDERER_URL=http://127.0.0.1:5173 electron .\"",
+    "dev:clean": "node scripts/dev-clean-port.cjs 5173 && npm run dev",
     "build": "tsc --noEmit && vite build",
     "check:docx": "node scripts/check-docx-table-pagination.cjs && node electron/services/exportService.cjs",
     "check:chrome": "node scripts/check-chrome-layout.mjs",
