@@ -83,7 +83,6 @@ export const appMenuItems: AppMenuItem[] = [
     id: 'bid-opportunity',
     label: '投标机会',
     description: '机会发现与线索跟踪',
-    notice: githubStarNotice,
   },
   {
     id: 'plugin-manager',

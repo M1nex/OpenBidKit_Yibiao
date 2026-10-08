@@ -1,0 +1,223 @@
+/* bid-opportunity-*（BidOpportunityPage.tsx 投标机会筛选骨架） */
+.bid-opportunity-page {
+  gap: 20px;
+}
+
+.bid-opportunity-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 2px 4px 0;
+}
+
+.bid-opportunity-head h2 {
+  margin: 7px 0 0;
+  color: var(--yb-text);
+  font-size: 26px;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+.bid-opportunity-head p {
+  max-width: 720px;
+  margin: 8px 0 0;
+  color: var(--yb-text-soft);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.bid-opportunity-status-pill {
+  flex: 0 0 auto;
+  padding: 6px 14px;
+  color: var(--yb-warning-deep);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  background: var(--yb-warning-soft);
+  border: 1px solid var(--yb-warning-border);
+  border-radius: var(--yb-radius-pill);
+}
+
+.bid-opportunity-filter-panel,
+.bid-opportunity-result-panel {
+  display: grid;
+  gap: 20px;
+  min-height: 0;
+  overflow: hidden;
+  padding: 24px 26px;
+}
+
+.bid-opportunity-result-panel {
+  flex: 1;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.bid-opportunity-panel-head h3 {
+  margin: 7px 0 0;
+  color: var(--yb-text);
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/* 四个筛选入口：日期 / 地区 / 网站 / 类型 */
+.bid-opportunity-filter-bar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.bid-opportunity-filter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 5px 10px;
+  padding: 15px 18px;
+  color: var(--yb-text);
+  text-align: left;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--yb-border-soft);
+  border-radius: var(--yb-radius-lg);
+  transition: border-color var(--yb-duration-fast) ease, box-shadow var(--yb-duration-fast) ease,
+    background var(--yb-duration-fast) ease, transform var(--yb-duration-fast) ease;
+}
+
+.bid-opportunity-filter:hover {
+  background: rgba(33, 116, 253, 0.03);
+  border-color: rgba(33, 116, 253, 0.3);
+  box-shadow: var(--yb-shadow-sm);
+  transform: translateY(-1px);
+}
+
+.bid-opportunity-filter.is-active {
+  background: rgba(33, 116, 253, 0.05);
+  border-color: rgba(33, 116, 253, 0.34);
+}
+
+.bid-opportunity-filter-label {
+  grid-column: 1;
+  color: var(--yb-text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.bid-opportunity-filter-value {
+  grid-column: 1;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bid-opportunity-filter-caret {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  color: var(--yb-text-muted);
+}
+
+/* 选择弹窗：日期输入 + 多选网格 */
+.bid-opportunity-dialog {
+  width: min(720px, calc(100vw - 40px));
+}
+
+.bid-opportunity-date-field {
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.bid-opportunity-date-field input {
+  height: 46px;
+  padding: 0 16px;
+  color: var(--yb-text);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--yb-border-soft);
+  border-radius: var(--yb-radius-md);
+  outline: none;
+}
+
+.bid-opportunity-date-field input:focus {
+  border-color: rgba(33, 116, 253, 0.5);
+  box-shadow: var(--yb-focus-ring);
+}
+
+.bid-opportunity-date-field p {
+  margin: 0;
+  color: var(--yb-text-soft);
+  font-size: 13px;
+}
+
+.bid-opportunity-option-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 10px;
+  max-height: min(46vh, 420px);
+  margin-top: 4px;
+  padding-right: 4px;
+  overflow: auto;
+}
+
+.bid-opportunity-option {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  padding: 10px 12px;
+  color: var(--yb-text);
+  font-size: 14px;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--yb-border-soft);
+  border-radius: var(--yb-radius-md);
+  transition: border-color var(--yb-duration-fast) ease, background var(--yb-duration-fast) ease,
+    color var(--yb-duration-fast) ease;
+}
+
+.bid-opportunity-option:hover {
+  border-color: rgba(33, 116, 253, 0.3);
+}
+
+.bid-opportunity-option.is-selected {
+  color: var(--yb-primary-deep);
+  font-weight: 600;
+  background: rgba(33, 116, 253, 0.08);
+  border-color: rgba(33, 116, 253, 0.4);
+}
+
+.bid-opportunity-option-mark {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: #ffffff;
+  background: transparent;
+  border: 1px solid rgba(33, 116, 253, 0.28);
+  border-radius: 6px;
+}
+
+.bid-opportunity-option.is-selected .bid-opportunity-option-mark {
+  background: var(--yb-primary);
+  border-color: var(--yb-primary);
+}
+
+.bid-opportunity-option-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 1180px) {
+  .bid-opportunity-filter-bar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bid-opportunity-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
