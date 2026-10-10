@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import AppRouter from './app/AppRouter';
 import GpuHardwareAccelerationPrompt from './app/GpuHardwareAccelerationPrompt';
-import LicenseStatusPrompt from './app/LicenseStatusPrompt';
 import RequiredOnlineServicesPrompt from './app/RequiredOnlineServicesPrompt';
 import UpdateNotifier from './app/UpdateNotifier';
-import { useTextModelSetupRedirect } from './app/useTextModelSetupRedirect';
 import AppShell from './components/AppShell';
 import { trackAppOpen, trackConfigUsage, trackPageView } from './shared/analytics/analytics';
 import type { SectionId } from './shared/types/navigation';
@@ -55,14 +53,11 @@ function App() {
     }
     return allowed;
   };
-  const { settingsRequest, clearSettingsRequest } = useTextModelSetupRedirect(requestSectionChange);
-
   return (
     <>
       <GpuHardwareAccelerationPrompt />
       <RequiredOnlineServicesPrompt />
       <UpdateNotifier />
-      <LicenseStatusPrompt />
       <AppShell
         activeSection={activeSection}
         developerMode={developerMode}
@@ -76,8 +71,6 @@ function App() {
           registerLeaveGuard={(guard) => {
             leaveGuardRef.current = guard;
           }}
-          settingsRequest={settingsRequest}
-          onSettingsRequestHandled={clearSettingsRequest}
         />
       </AppShell>
     </>

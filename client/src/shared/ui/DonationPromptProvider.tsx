@@ -32,11 +32,8 @@ export function DonationPromptProvider({ children }: { children: ReactNode }) {
   const submitRequestId = useRef(0);
 
   useEffect(() => {
-    const unsubscribePrompt = window.yibiao.donation.onPrompt((payload) => {
-      setPrompt(payload);
-      setOpen(true);
-      setError('');
-    });
+    // 本地二开：不再主动弹出打赏提醒，仅保留支付结果确认与订单轮询链路。
+    const unsubscribePrompt = window.yibiao.donation.onPrompt(() => undefined);
     const unsubscribePaid = window.yibiao.donation.onPaid(() => {
       submitRequestId.current += 1;
       setOpen(false);

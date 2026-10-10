@@ -1,20 +1,18 @@
 import { useEffect, useRef } from 'react';
 import { useToast } from '../shared/ui';
 import type { PluginUpdateInfo } from '../shared/types/ipc';
-import { hasPromptedUpdate, showUpdateReadyToast } from '../shared/updateToast';
-
-const updatePollIntervalMs = 30 * 60 * 1000;
 
 /**
- * 应用更新与插件升级提示。
+ * 插件升级提示。
  *
- * 本地二开：原有的「远程公告」弹窗（从 analytics.agnet.top/notice 拉取并以弹窗
- * 展示二维码等内容）已整体移除，打开客户端不会再弹出公告弹窗；应用更新提示与
- * 插件升级提示的逻辑保持不变。
+ * 本地二开：
+ * - 原有的「远程公告」弹窗已整体移除（见历史提交），打开客户端不再弹公告；
+ * - 原有的自动检查更新与「新版本已下载，可重启安装」提示一并移除，客户端不会再在
+ *   后台下载官方版本，也就不会把本地二开版本替换成官方版本。设置页里的手动检查
+ *   更新入口保留，需要时仍可手动检查。
  */
 function UpdateNotifier() {
   const { showToast, dismissToast } = useToast();
-  const updateCheckingRef = useRef(false);
   const pluginUpdateRunningRef = useRef(false);
   const promptedPluginUpdatesRef = useRef(new Set<string>());
 
@@ -83,40 +81,8 @@ function UpdateNotifier() {
 
     const unsubscribePluginUpdates = window.yibiao?.onPluginUpdatesAvailable(promptPluginUpdates);
 
-    const checkUpdate = async () => {
-      if (updateCheckingRef.current) {
-        return;
-      }
-      updateCheckingRef.current = true;
-      try {
-        const result = await window.yibiao?.checkUpdate();
-        if (!result?.enabled) {
-          return;
-        }
-        if (disposed || !result.updateAvailable || !result.downloaded || !result.version) {
-          return;
-        }
-        if (hasPromptedUpdate(result.version)) {
-          return;
-        }
-        showUpdateReadyToast(showToast, result.version);
-      } catch {
-        // 自动检查失败不打扰用户，手动检查入口会展示错误。
-      } finally {
-        updateCheckingRef.current = false;
-      }
-    };
-
-    void checkUpdate();
-    const timer = disposed ? undefined : window.setInterval(() => {
-      void checkUpdate();
-    }, updatePollIntervalMs);
-
     return () => {
       disposed = true;
-      if (timer !== undefined) {
-        window.clearInterval(timer);
-      }
       unsubscribePluginUpdates?.();
     };
   }, [dismissToast, showToast]);
