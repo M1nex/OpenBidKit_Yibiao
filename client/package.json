@@ -42,7 +42,7 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "FB208",
+        "owner": "M1nex",
         "repo": "OpenBidKit_Yibiao",
         "releaseType": "release"
       }

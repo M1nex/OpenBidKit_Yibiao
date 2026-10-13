@@ -624,7 +624,7 @@ const initialState: SettingsPageState = {
     developer_mode: false,
     developer_token_stats_auto_open: false,
     developer_agent_monitor_auto_open: false,
-    update_channel: 'atomgit',
+    update_channel: 'github',
     gpu_hardware_acceleration_enabled: true,
     gpu_hardware_acceleration_configured: true,
   },
@@ -2582,11 +2582,11 @@ function SettingsPage({ onDeveloperModeChange, request, onRequestHandled }: Sett
                   <span className="about-links-label">GitHub 仓库</span>
                   <a
                     className="about-links-value is-link"
-                    href="https://github.com/FB208/OpenBidKit_Yibiao"
+                    href="https://github.com/M1nex/OpenBidKit_Yibiao"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    FB208/OpenBidKit_Yibiao
+                    M1nex/OpenBidKit_Yibiao
                   </a>
                 </li>
                 <li className="about-links-item">

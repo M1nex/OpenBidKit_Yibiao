@@ -3,7 +3,7 @@ const path = require('node:path');
 const Database = require('better-sqlite3');
 const { getWorkspaceDatabasePath } = require('../utils/paths.cjs');
 
-const schemaVersion = 37;
+const schemaVersion = 38;
 
 // 投标机会的公告、查询快照和正文缓存统一保存在工作区数据库。
 function createBidOpportunitySchema(db) {
@@ -53,6 +53,15 @@ function createBidOpportunitySchema(db) {
     CREATE INDEX IF NOT EXISTS idx_bid_opportunity_query_items_notice
     ON bid_opportunity_query_items(notice_id);
   `);
+}
+
+function repairBidOpportunitySourceUrls(db) {
+  db.prepare(`UPDATE bid_opportunity_notices
+    SET source_url = REPLACE(source_url,
+      'http://www.ccgp-hunan.gov.cn/portal/detail?',
+      'http://www.ccgp-hunan.gov.cn/luban/front/detail?')
+    WHERE source_id = 'hunan'
+      AND source_url LIKE 'http://www.ccgp-hunan.gov.cn/portal/detail?%'`).run();
 }
 
 // 保存当前工作区的一份开票信息。
@@ -1840,6 +1849,11 @@ const migrations = [
     version: 37,
     description: '新增投标机会公告和查询缓存',
     up: createBidOpportunitySchema,
+  },
+  {
+    version: 38,
+    description: '修正湖南公告来源页面地址',
+    up: repairBidOpportunitySourceUrls,
   },
 ];
 

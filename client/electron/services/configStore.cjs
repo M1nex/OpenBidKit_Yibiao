@@ -204,7 +204,7 @@ const defaultConfig = {
     mermaid_concurrency_limit: DEFAULT_COMPONENT_CONCURRENCY_LIMIT,
     html_concurrency_limit: DEFAULT_COMPONENT_CONCURRENCY_LIMIT,
   },
-  update_channel: 'atomgit',
+  update_channel: 'github',
   gpu_hardware_acceleration_enabled: true,
   gpu_hardware_acceleration_configured: true,
   export_format: defaultExportFormat,
@@ -503,7 +503,10 @@ function normalizeConfig(config) {
     image_model: activeImageProfile,
     image_model_profiles: imageModelProfiles,
     components: normalizeComponentsConfig(source.components),
-    update_channel: normalizeUpdateChannel(source.update_channel),
+    // 项目已统一迁移到 M1nex GitHub Release；旧版本保存的 AtomGit 选择也迁移到 GitHub。
+    update_channel: normalizeUpdateChannel(source.update_channel) === 'atomgit'
+      ? 'github'
+      : normalizeUpdateChannel(source.update_channel),
     gpu_hardware_acceleration_enabled: gpuHardwareAccelerationEnabled,
     gpu_hardware_acceleration_configured: gpuHardwareAccelerationConfigured === false ? true : gpuHardwareAccelerationConfigured,
     export_format: normalizeExportFormat(source.export_format),

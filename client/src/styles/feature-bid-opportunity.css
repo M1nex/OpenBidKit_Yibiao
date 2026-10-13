@@ -39,6 +39,18 @@
   border-radius: var(--yb-radius-pill);
 }
 
+.bid-opportunity-status-pill.is-ready {
+  color: var(--yb-success-deep, #1f7a4d);
+  background: var(--yb-success-soft, rgba(34, 197, 94, 0.1));
+  border-color: var(--yb-success-border, rgba(34, 197, 94, 0.25));
+}
+
+.bid-opportunity-status-pill.is-loading {
+  color: var(--yb-primary-deep);
+  background: rgba(33, 116, 253, 0.08);
+  border-color: rgba(33, 116, 253, 0.25);
+}
+
 .bid-opportunity-filter-panel,
 .bid-opportunity-result-panel {
   display: grid;
@@ -46,6 +58,213 @@
   min-height: 0;
   overflow: hidden;
   padding: 24px 26px;
+}
+
+.bid-opportunity-refresh-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  justify-self: end;
+}
+
+.bid-opportunity-progress {
+  margin: -8px 0 0;
+  color: var(--yb-text-soft);
+  font-size: 13px;
+}
+
+.bid-opportunity-result-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 22px;
+  margin-left: 5px;
+  padding: 0 7px;
+  color: var(--yb-primary-deep);
+  font-size: 12px;
+  background: rgba(33, 116, 253, 0.1);
+  border-radius: var(--yb-radius-pill);
+}
+
+.bid-opportunity-result-updated {
+  color: var(--yb-text-muted);
+  font-size: 12px;
+}
+
+.bid-opportunity-source-statuses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: -8px;
+}
+
+.bid-opportunity-source-status {
+  padding: 5px 9px;
+  color: var(--yb-text-soft);
+  font-size: 12px;
+  background: rgba(148, 163, 184, 0.1);
+  border: 1px solid var(--yb-border-soft);
+  border-radius: var(--yb-radius-pill);
+}
+
+.bid-opportunity-source-status.is-success {
+  color: var(--yb-success-deep, #1f7a4d);
+  background: rgba(34, 197, 94, 0.08);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.bid-opportunity-source-status.is-error {
+  color: var(--yb-danger-deep, #b42318);
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.bid-opportunity-loading {
+  display: grid;
+  min-height: 180px;
+  place-items: center;
+  color: var(--yb-text-soft);
+  font-size: 14px;
+}
+
+.bid-opportunity-notice-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 12px;
+  min-height: 0;
+  padding-right: 4px;
+  overflow: auto;
+}
+
+.bid-opportunity-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding-top: 4px;
+  color: var(--yb-text-muted);
+  font-size: 12px;
+}
+
+.bid-opportunity-pagination .text-button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.bid-opportunity-notice-card {
+  display: grid;
+  gap: 11px;
+  align-content: start;
+  padding: 16px 17px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid var(--yb-border-soft);
+  border-radius: var(--yb-radius-lg);
+  transition: border-color var(--yb-duration-fast) ease, box-shadow var(--yb-duration-fast) ease, transform var(--yb-duration-fast) ease;
+}
+
+.bid-opportunity-notice-card:hover {
+  border-color: rgba(33, 116, 253, 0.3);
+  box-shadow: var(--yb-shadow-sm);
+  transform: translateY(-1px);
+}
+
+.bid-opportunity-notice-card-head,
+.bid-opportunity-notice-meta,
+.bid-opportunity-notice-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.bid-opportunity-notice-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+
+.bid-opportunity-notice-tag {
+  max-width: 190px;
+  overflow: hidden;
+  padding: 4px 7px;
+  color: var(--yb-primary-deep);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: rgba(33, 116, 253, 0.08);
+  border-radius: var(--yb-radius-pill);
+}
+
+.bid-opportunity-notice-tag.is-muted {
+  color: var(--yb-text-soft);
+  background: rgba(148, 163, 184, 0.12);
+}
+
+.bid-opportunity-notice-date {
+  flex: 0 0 auto;
+  color: var(--yb-text-muted);
+  font-size: 12px;
+}
+
+.bid-opportunity-notice-title {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--yb-text);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: left;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.bid-opportunity-notice-title:hover {
+  color: var(--yb-primary-deep);
+}
+
+.bid-opportunity-notice-meta {
+  justify-content: flex-start;
+  overflow: hidden;
+  color: var(--yb-text-soft);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.bid-opportunity-notice-meta span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bid-opportunity-notice-actions {
+  justify-content: flex-start;
+  padding-top: 3px;
+  border-top: 1px solid var(--yb-border-soft);
+}
+
+.bid-opportunity-notice-actions .text-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.bid-opportunity-detail-dialog {
+  width: min(900px, calc(100vw - 40px));
+}
+
+.bid-opportunity-detail-body {
+  max-height: min(62vh, 620px);
+  margin-top: 4px;
+  padding: 15px 16px;
+  overflow: auto;
+  color: var(--yb-text-soft);
+  font-size: 13px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  background: rgba(148, 163, 184, 0.07);
+  border: 1px solid var(--yb-border-soft);
+  border-radius: var(--yb-radius-md);
 }
 
 .bid-opportunity-result-panel {
@@ -121,6 +340,57 @@
 /* 选择弹窗：日期输入 + 多选网格 */
 .bid-opportunity-dialog {
   width: min(720px, calc(100vw - 40px));
+}
+
+.bid-opportunity-popover {
+  z-index: 30;
+  width: min(540px, calc(100vw - 32px));
+  max-height: min(70vh, 560px);
+  padding: 16px;
+  overflow: auto;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid var(--yb-border-soft);
+  border-radius: var(--yb-radius-lg);
+  box-shadow: var(--yb-shadow-lg, 0 18px 48px rgba(30, 64, 175, 0.16));
+  outline: none;
+  animation: bid-opportunity-popover-in 120ms ease-out;
+}
+
+.bid-opportunity-popover-head,
+.bid-opportunity-popover-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.bid-opportunity-popover-head strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--yb-text);
+  font-size: 16px;
+}
+
+.bid-opportunity-popover-description {
+  margin: 8px 0 0;
+  color: var(--yb-text-soft);
+  font-size: 12px;
+}
+
+.bid-opportunity-popover-actions {
+  justify-content: flex-end;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--yb-border-soft);
+}
+
+.bid-opportunity-popover-arrow {
+  fill: #ffffff;
+}
+
+@keyframes bid-opportunity-popover-in {
+  from { opacity: 0; transform: translateY(-3px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .bid-opportunity-date-field {

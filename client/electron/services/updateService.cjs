@@ -3,11 +3,11 @@ const http = require('node:http');
 const https = require('node:https');
 const path = require('node:path');
 
-const GITHUB_RELEASE_API = 'https://api.github.com/repos/FB208/OpenBidKit_Yibiao/releases/latest';
-const GITHUB_RELEASE_DOWNLOAD_URL = 'https://github.com/FB208/OpenBidKit_Yibiao/releases/latest';
+const GITHUB_RELEASE_API = 'https://api.github.com/repos/M1nex/OpenBidKit_Yibiao/releases/latest';
+const GITHUB_RELEASE_DOWNLOAD_URL = 'https://github.com/M1nex/OpenBidKit_Yibiao/releases/latest';
 const GITHUB_PROVIDER_OPTIONS = {
   provider: 'github',
-  owner: 'FB208',
+  owner: 'M1nex',
   repo: 'OpenBidKit_Yibiao',
   releaseType: 'release',
 };
@@ -99,7 +99,7 @@ function normalizeUpdateChannel(value) {
   if (value === 'github' || value === 'cloudflare' || value === 'atomgit') {
     return value;
   }
-  return 'atomgit';
+  return 'github';
 }
 
 function getUpdateChannel(configStore) {

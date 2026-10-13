@@ -1,4 +1,5 @@
 const { net } = require('electron');
+const { getHunanSourceUrl, getHunanDetailApiUrl } = require('./bidOpportunityUrls.cjs');
 
 const SOURCES = [
   { id: 'hunan', name: '中国湖南政府采购网', baseUrl: 'http://www.ccgp-hunan.gov.cn/' },
@@ -71,7 +72,7 @@ function createHunanAdapter() {
       publishedAt, publishedDate: dateText(publishedAt),
       regionLabel: normalizeText(row.districtName || row.districtCode), regionBasis: 'source-district',
       procuringEntity: normalizeText(row.purchaseName),
-      sourceUrl: `${source.baseUrl}portal/detail?articleId=${encodeURIComponent(sourceNoticeId)}&parentId=622707`,
+      sourceUrl: getHunanSourceUrl(sourceNoticeId),
       sourceReference: row,
     };
   }
@@ -99,7 +100,7 @@ function createHunanAdapter() {
       return { notices, remoteTotal, warning: page > 100 ? '达到单来源分页上限，结果可能不完整。' : null };
     },
     async detail(notice) {
-      const payload = await fetchJson(notice.sourceUrl);
+      const payload = await fetchJson(getHunanDetailApiUrl(notice.sourceNoticeId));
       return payload.result?.data?.content || '';
     },
   };
