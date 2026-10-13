@@ -3,7 +3,57 @@ const path = require('node:path');
 const Database = require('better-sqlite3');
 const { getWorkspaceDatabasePath } = require('../utils/paths.cjs');
 
-const schemaVersion = 36;
+const schemaVersion = 37;
+
+// 投标机会的公告、查询快照和正文缓存统一保存在工作区数据库。
+function createBidOpportunitySchema(db) {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS bid_opportunity_notices (
+      notice_id TEXT PRIMARY KEY,
+      source_id TEXT NOT NULL,
+      source_notice_id TEXT NOT NULL,
+      notice_type TEXT NOT NULL,
+      raw_notice_type TEXT NOT NULL,
+      title TEXT NOT NULL,
+      published_at TEXT,
+      published_date TEXT,
+      region_label TEXT NOT NULL DEFAULT '',
+      region_basis TEXT NOT NULL,
+      procuring_entity TEXT NOT NULL DEFAULT '',
+      source_url TEXT NOT NULL,
+      source_reference_json TEXT NOT NULL,
+      body_html TEXT,
+      detail_fetched_at TEXT,
+      detail_error TEXT,
+      updated_at TEXT NOT NULL,
+      UNIQUE(source_id, source_notice_id)
+    );
+    CREATE INDEX IF NOT EXISTS idx_bid_opportunity_notices_date
+    ON bid_opportunity_notices(published_date, published_at);
+    CREATE TABLE IF NOT EXISTS bid_opportunity_queries (
+      query_key TEXT PRIMARY KEY,
+      source_id TEXT NOT NULL,
+      query_date TEXT NOT NULL,
+      keyword TEXT NOT NULL,
+      status TEXT NOT NULL,
+      complete INTEGER NOT NULL DEFAULT 0,
+      remote_total INTEGER,
+      last_checked_at TEXT NOT NULL,
+      last_success_at TEXT,
+      error TEXT,
+      warning TEXT
+    );
+    CREATE TABLE IF NOT EXISTS bid_opportunity_query_items (
+      query_key TEXT NOT NULL,
+      notice_id TEXT NOT NULL,
+      PRIMARY KEY(query_key, notice_id),
+      FOREIGN KEY(query_key) REFERENCES bid_opportunity_queries(query_key) ON DELETE CASCADE,
+      FOREIGN KEY(notice_id) REFERENCES bid_opportunity_notices(notice_id) ON DELETE CASCADE
+    );
+    CREATE INDEX IF NOT EXISTS idx_bid_opportunity_query_items_notice
+    ON bid_opportunity_query_items(notice_id);
+  `);
+}
 
 // 保存当前工作区的一份开票信息。
 function createOfficialInvoiceSchema(db) {
@@ -1236,6 +1286,11 @@ function createFeasibilityReportSchema(db) {
 
 const schemaHealthTableGroups = [
   {
+    version: 37,
+    tables: ['bid_opportunity_notices', 'bid_opportunity_queries', 'bid_opportunity_query_items'],
+    repair: createBidOpportunitySchema,
+  },
+  {
     version: 1,
     tables: [
       'technical_plan_meta',
@@ -1780,6 +1835,11 @@ const migrations = [
     version: 36,
     description: '技术方案配图比例字段升级为整数并恢复默认 30%',
     up: migrateTechnicalPlanImageQuantity,
+  },
+  {
+    version: 37,
+    description: '新增投标机会公告和查询缓存',
+    up: createBidOpportunitySchema,
   },
 ];
 

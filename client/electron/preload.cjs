@@ -215,6 +215,16 @@ const bridge = {
       return () => ipcRenderer.removeListener('knowledge-base:event', listener);
     },
   },
+  bidOpportunity: {
+    getSources: () => ipcRenderer.invoke('bid-opportunity:get-sources'),
+    query: (request) => ipcRenderer.invoke('bid-opportunity:query', request),
+    getDetail: (noticeId, options) => ipcRenderer.invoke('bid-opportunity:get-detail', noticeId, options),
+    onProgress: (callback) => {
+      const listener = (_event, payload) => callback(payload);
+      ipcRenderer.on('bid-opportunity:progress', listener);
+      return () => ipcRenderer.removeListener('bid-opportunity:progress', listener);
+    },
+  },
   credentialLibrary: {
     load: () => ipcRenderer.invoke('credential-library:load'),
     importTestData: () => ipcRenderer.invoke('credential-library:import-test-data'),

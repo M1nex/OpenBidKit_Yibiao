@@ -4,6 +4,7 @@ const { registerAiIpc } = require('./aiIpc.cjs');
 const { registerAutoConfirmationIpc } = require('./autoConfirmationIpc.cjs');
 const { registerConfigIpc } = require('./configIpc.cjs');
 const { registerCredentialLibraryIpc } = require('./credentialLibraryIpc.cjs');
+const { registerBidOpportunityIpc } = require('./bidOpportunityIpc.cjs');
 const { registerDeveloperIpc } = require('./developerIpc.cjs');
 const { registerDonationIpc } = require('./donationIpc.cjs');
 const { registerDuplicateCheckIpc } = require('./duplicateCheckIpc.cjs');
@@ -26,6 +27,8 @@ const { createAiService } = require('../services/aiService.cjs');
 const { createAutoConfirmationService } = require('../services/autoConfirmationService.cjs');
 const { createConfigStore } = require('../services/configStore.cjs');
 const { createCredentialLibraryService } = require('../services/credentialLibraryService.cjs');
+const { createBidOpportunityService } = require('../services/bidOpportunityService.cjs');
+const { createBidOpportunityStore } = require('../services/bidOpportunityStore.cjs');
 const { createDeveloperExpansionReplaceTestService } = require('../services/developerExpansionReplaceTest.cjs');
 const { createDeveloperLayoutFigureService } = require('../services/developerLayoutFigureService.cjs');
 const { createDonationService } = require('../services/donationService.cjs');
@@ -122,6 +125,9 @@ function sendToWebContents(webContents, channel, payload) {
 }
 
 const workspaceDatabaseChannels = [
+  'bid-opportunity:get-sources',
+  'bid-opportunity:query',
+  'bid-opportunity:get-detail',
   'credential-library:load',
   'credential-library:import-test-data',
   'credential-library:save-profile',
@@ -290,6 +296,7 @@ function registerWorkspaceDatabaseServices({ app, configStore, aiService, agentS
   clearOrphanedGeneratedImages(app, sqliteDatabase.db);
   const taskLogStore = createTaskLogStore({ db: sqliteDatabase.db });
   const credentialLibraryService = createCredentialLibraryService({ app, db: sqliteDatabase.db });
+  const bidOpportunityService = createBidOpportunityService({ store: createBidOpportunityStore({ db: sqliteDatabase.db }) });
   const knowledgeBaseStore = createKnowledgeBaseStore({ app, db: sqliteDatabase.db });
   const knowledgeBaseService = createKnowledgeBaseService({ app, aiService, configStore, knowledgeBaseStore });
   const technicalPlanStore = createTechnicalPlanStore({ app, db: sqliteDatabase.db, fileService, agentService, taskLogStore, configStore });
@@ -316,6 +323,7 @@ function registerWorkspaceDatabaseServices({ app, configStore, aiService, agentS
   }
 
   clearWorkspaceDatabaseIpc();
+  registerBidOpportunityIpc({ bidOpportunityService });
   registerCredentialLibraryIpc({ credentialLibraryService, configStore });
   registerKnowledgeBaseIpc({ knowledgeBaseService });
   registerTechnicalPlanIpc({ technicalPlanStore, taskService, agentService, openXmlHelperService });

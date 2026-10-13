@@ -4,7 +4,7 @@
 -- 1. 本文件用于开源开发者阅读、评审和排查问题，展示 workspace/yibiao.sqlite 的目标完整表结构。
 -- 2. 用户运行客户端时不需要手动执行本文件。
 -- 3. 客户端运行时建表和升级以 Electron Main 侧 migration 代码为准。
--- 4. 当前运行代码已落地 technical_plan_* v1、duplicate_check_* / rejection_check_* v2、knowledge_* v3、technical_plan_global_fact_groups v4、标段兼容 v5/v6、标段选择 v7、旧待选择标段兼容字段 v8、工作流类型和原方案文件状态 v9、招标解析项选择配置 v10、知识库排序 v11、废标项检查多投标文件 v12、已有方案目录配置 v13、多标段优化状态 v14、导出模板库 v15、多招标文件 v16、全文图片编排 v17、目录字数控制 v18、全局事实补全模式 v22、可行性研究报告 v23、官方 API 开票信息 v24、统一生成配置 v25、单企业资信库 v26、导出模板样式范围 v32 目标结构。
+-- 4. 当前运行代码已落地 technical_plan_* v1、duplicate_check_* / rejection_check_* v2、knowledge_* v3、technical_plan_global_fact_groups v4、标段兼容 v5/v6、标段选择 v7、旧待选择标段兼容字段 v8、工作流类型和原方案文件状态 v9、招标解析项选择配置 v10、知识库排序 v11、废标项检查多投标文件 v12、已有方案目录配置 v13、多标段优化状态 v14、导出模板库 v15、多招标文件 v16、全文图片编排 v17、目录字数控制 v18、全局事实补全模式 v22、可行性研究报告 v23、官方 API 开票信息 v24、统一生成配置 v25、单企业资信库 v26、导出模板样式范围 v32、投标机会公告缓存 v37 目标结构。
 -- 5. 每次表结构调整后，需要同步更新本文件和 runtime migration 版本。
 -- 6. 本文件不保存历史版本，每次更新都写入最新目标完整结构。
 
@@ -14,7 +14,7 @@ PRAGMA busy_timeout = 5000;
 
 -- 目标完整结构版本。
 -- 运行时代码应通过 PRAGMA user_version 判断是否需要自动升级。
-PRAGMA user_version = 34;
+PRAGMA user_version = 37;
 
 -- ============================================================================
 -- 技术方案 technical_plan_*（v1 已落地）
@@ -957,6 +957,61 @@ CREATE TABLE IF NOT EXISTS export_templates (
 
 CREATE INDEX IF NOT EXISTS idx_export_templates_updated
 ON export_templates(updated_at DESC);
+
+-- ============================================================================
+-- 投标机会 bid_opportunity_*（v37 已落地）
+-- ============================================================================
+
+-- 公告统一索引和详情缓存。source_reference_json 保存来源返回的原始行，
+-- 正文 HTML 在用户打开详情后按需缓存。
+CREATE TABLE IF NOT EXISTS bid_opportunity_notices (
+  notice_id TEXT PRIMARY KEY,
+  source_id TEXT NOT NULL,
+  source_notice_id TEXT NOT NULL,
+  notice_type TEXT NOT NULL,
+  raw_notice_type TEXT NOT NULL,
+  title TEXT NOT NULL,
+  published_at TEXT,
+  published_date TEXT,
+  region_label TEXT NOT NULL DEFAULT '',
+  region_basis TEXT NOT NULL,
+  procuring_entity TEXT NOT NULL DEFAULT '',
+  source_url TEXT NOT NULL,
+  source_reference_json TEXT NOT NULL,
+  body_html TEXT,
+  detail_fetched_at TEXT,
+  detail_error TEXT,
+  updated_at TEXT NOT NULL,
+  UNIQUE(source_id, source_notice_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_bid_opportunity_notices_date
+ON bid_opportunity_notices(published_date, published_at);
+
+CREATE TABLE IF NOT EXISTS bid_opportunity_queries (
+  query_key TEXT PRIMARY KEY,
+  source_id TEXT NOT NULL,
+  query_date TEXT NOT NULL,
+  keyword TEXT NOT NULL,
+  status TEXT NOT NULL,
+  complete INTEGER NOT NULL DEFAULT 0,
+  remote_total INTEGER,
+  last_checked_at TEXT NOT NULL,
+  last_success_at TEXT,
+  error TEXT,
+  warning TEXT
+);
+
+CREATE TABLE IF NOT EXISTS bid_opportunity_query_items (
+  query_key TEXT NOT NULL,
+  notice_id TEXT NOT NULL,
+  PRIMARY KEY(query_key, notice_id),
+  FOREIGN KEY(query_key) REFERENCES bid_opportunity_queries(query_key) ON DELETE CASCADE,
+  FOREIGN KEY(notice_id) REFERENCES bid_opportunity_notices(notice_id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_bid_opportunity_query_items_notice
+ON bid_opportunity_query_items(notice_id);
 
 -- ============================================================================
 -- 可行性研究报告 feasibility_report_*（v23 已落地）

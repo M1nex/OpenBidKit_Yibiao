@@ -7,6 +7,7 @@ import type { RejectionCheckWorkspacePatch, RejectionCheckWorkspaceState, Reject
 import type { BidAnalysisMode, BidAnalysisTaskState, BidSectionMode, ContentGenerationOptions, ContentGenerationPlanState, ContentGenerationProgressDetail, ContentGenerationRuntimeState, ContentGenerationSectionState, DetectedBidSection, GlobalFactGroupState, SaveOutlineRequest, SaveOutlineSelectionRequest, TechnicalPlanGenerationConfig, TechnicalPlanState, TechnicalPlanStep } from '../../features/technical-plan/types';
 import type { FeasibilityProjectInfo, FeasibilityReportState, FeasibilityReportStep, FeasibilitySaveOutlineRequest, FeasibilitySourceFile } from '../../features/feasibility-report/types';
 import type { CredentialCertificate, CredentialEmployee, CredentialImageFieldKey, CredentialLibraryImportResult, CredentialLibraryMutationResult, CredentialLibraryProfile, CredentialLibrarySnapshot, CredentialOtherMaterial, CredentialProject, CredentialRecordSavePayload } from '../../features/credential-library/types';
+import type { BidOpportunityNoticeDetail, BidOpportunityProgress, BidOpportunityQueryRequest, BidOpportunityQueryResult, BidOpportunitySource } from '../../features/bid-opportunity/types';
 import type { ExportFormatConfig, ExportTemplateRecord } from './exportFormat';
 import type { TechnicalPlanOutlineData as OutlineData } from './outline';
 
@@ -714,6 +715,12 @@ export interface YibiaoBridge {
     readItems: (documentId: string) => Promise<KnowledgeItem[]>;
     readAnalysis: (documentId: string) => Promise<KnowledgeAnalysisSnapshot>;
     onEvent: (callback: (event: KnowledgeBaseEvent) => void) => () => void;
+  };
+  bidOpportunity: {
+    getSources: () => Promise<BidOpportunitySource[]>;
+    query: (request: BidOpportunityQueryRequest) => Promise<BidOpportunityQueryResult>;
+    getDetail: (noticeId: string, options?: { refresh?: boolean }) => Promise<BidOpportunityNoticeDetail>;
+    onProgress: (callback: (progress: BidOpportunityProgress) => void) => () => void;
   };
   credentialLibrary: {
     load: () => Promise<CredentialLibrarySnapshot>;
