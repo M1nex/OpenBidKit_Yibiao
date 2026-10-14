@@ -42,7 +42,7 @@ async function fetchGithubRelease(tagName) {
     }))
     .filter((asset) => {
       if (platform === 'win') {
-        return /^(?:builder-debug\.yml|latest\.yml|Yibiao-.+-win-x64\.(?:exe|msi|zip)(?:\.blockmap)?)$/i.test(asset.name);
+        return /^(?:latest\.yml|Yibiao-.+-win-x64\.exe(?:\.blockmap)?)$/i.test(asset.name);
       }
       if (platform === 'mac') {
         return /^(?:builder-debug\.yml|latest-mac\.yml|Yibiao-.+-mac-(?:x64|arm64)\.(?:dmg|zip)(?:\.blockmap)?)$/i.test(asset.name);

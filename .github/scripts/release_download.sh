@@ -53,9 +53,10 @@ upload_atomgit_asset() {
   encoded_owner="$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1], safe=''))" "$ATOMGIT_OWNER")"
   encoded_repo="$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1], safe=''))" "$ATOMGIT_REPO")"
   local upload_api="${ATOM_API_BASE}/api/v5/repos/${encoded_owner}/${encoded_repo}/releases/${encoded_tag}/upload_url?file_name=${encoded_file_name}"
-  local upload_response upload_url content_type header_content_type header_keys
+  local upload_response upload_url content_type header_content_type header_keys attempt
+  for attempt in 1 2 3; do
   echo "正在获取 AtomGit 上传地址: $file_name"
-  upload_response="$(curl --fail --silent --show-error -H 'Accept: application/json' -H "Authorization: Bearer ${ATOMGIT_ACCESS_TOKEN}" "$upload_api")"
+  upload_response="$(curl --fail --silent --show-error --connect-timeout 15 --max-time 45 -H 'Accept: application/json' -H "Authorization: Bearer ${ATOMGIT_ACCESS_TOKEN}" "$upload_api")"
   upload_url="$(echo "$upload_response" | jq -r '.url // empty')"
   if [[ -z "$upload_url" ]]; then
     echo "AtomGit 未返回 ${file_name} 的上传地址。" >&2
@@ -76,11 +77,18 @@ upload_atomgit_asset() {
       extra_headers+=(-H "${hk}: ${hv}")
     done <<< "$header_keys"
   fi
-  echo "正在上传到 AtomGit: $file_name"
-  curl --fail --silent --show-error --retry 3 --retry-all-errors \
-    --connect-timeout 30 --max-time 1800 -X PUT "$upload_url" \
+  echo "正在上传到 AtomGit: $file_name（尝试 $attempt/3）"
+  if curl --fail --silent --show-error --http1.1 \
+    --connect-timeout 15 --max-time 600 --speed-limit 1024 --speed-time 90 \
+    -H 'Expect:' -X PUT "$upload_url" \
     "${extra_headers[@]}" \
-    --upload-file "$file_path" -o /dev/null
+    --upload-file "$file_path" -o /dev/null \
+    --write-out 'HTTP=%{http_code} uploaded=%{size_upload} speed=%{speed_upload} duration=%{time_total}\n'; then
+    return
+  fi
+  echo "上传未完成，下次尝试将重新获取上传地址。"
+  done
+  return 1
 }
 
 # 调用共用准备逻辑，再按待传清单下载和上传，全部成功后才完成发布。
