@@ -33,16 +33,31 @@ async function fetchGithubRelease(tagName) {
   if (release.tag_name !== tagName || release.draft || !release.assets?.length) {
     throw new Error(`GitHub Release ${tagName} must be published and contain assets.`);
   }
+  const platform = String(process.env.ATOMGIT_PLATFORM || 'all').trim().toLowerCase();
+  const assets = release.assets
+    .map((asset) => ({
+      name: asset.name,
+      size: asset.size,
+      url: asset.browser_download_url,
+    }))
+    .filter((asset) => {
+      if (platform === 'win') {
+        return /^(?:builder-debug\.yml|latest\.yml|Yibiao-.+-win-x64\.(?:exe|msi|zip)(?:\.blockmap)?)$/i.test(asset.name);
+      }
+      if (platform === 'mac') {
+        return /^(?:builder-debug\.yml|latest-mac\.yml|Yibiao-.+-mac-(?:x64|arm64)\.(?:dmg|zip)(?:\.blockmap)?)$/i.test(asset.name);
+      }
+      return true;
+    });
+  if (assets.length === 0) {
+    throw new Error(`No ${platform} release assets found for ${tagName}.`);
+  }
   return {
     tagName,
     name: release.name || tagName,
     body: release.body || '',
     isPrerelease: release.prerelease,
-    assets: release.assets.map((asset) => ({
-      name: asset.name,
-      size: asset.size,
-      url: asset.browser_download_url,
-    })),
+    assets,
   };
 }
 
