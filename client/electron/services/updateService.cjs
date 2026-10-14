@@ -13,8 +13,8 @@ const GITHUB_PROVIDER_OPTIONS = {
 };
 const CLOUDFLARE_RELEASE_BASE_URL = 'https://openbidkit-oss.agnet.top/release';
 const CLOUDFLARE_LATEST_JSON_URL = `${CLOUDFLARE_RELEASE_BASE_URL}/latest.json`;
-const ATOMGIT_REPOSITORY_URL = 'https://atomgit.com/FB208/OpenBidKit_Yibiao';
-const ATOMGIT_RELEASE_API_BASE_URL = 'https://api.atomgit.com/api/v5/repos/FB208/OpenBidKit_Yibiao/releases';
+const ATOMGIT_REPOSITORY_URL = 'https://atomgit.com/weixin_43917306/OpenBidKit_Yibiao';
+const ATOMGIT_RELEASE_API_BASE_URL = 'https://api.atomgit.com/api/v5/repos/weixin_43917306/OpenBidKit_Yibiao/releases';
 
 let autoUpdaterInstance = null;
 let downloadedUpdateVersion = '';

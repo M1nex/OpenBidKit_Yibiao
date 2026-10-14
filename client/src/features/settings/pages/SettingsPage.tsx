@@ -624,7 +624,7 @@ const initialState: SettingsPageState = {
     developer_mode: false,
     developer_token_stats_auto_open: false,
     developer_agent_monitor_auto_open: false,
-    update_channel: 'github',
+    update_channel: 'atomgit',
     gpu_hardware_acceleration_enabled: true,
     gpu_hardware_acceleration_configured: true,
   },
