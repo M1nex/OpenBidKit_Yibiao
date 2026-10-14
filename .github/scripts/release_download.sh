@@ -77,7 +77,8 @@ upload_atomgit_asset() {
     done <<< "$header_keys"
   fi
   echo "正在上传到 AtomGit: $file_name"
-  curl --fail --silent --show-error -X PUT "$upload_url" \
+  curl --fail --silent --show-error --retry 3 --retry-all-errors \
+    --connect-timeout 30 --max-time 1800 -X PUT "$upload_url" \
     "${extra_headers[@]}" \
     --upload-file "$file_path" -o /dev/null
 }
@@ -93,7 +94,10 @@ main() {
     asset_url="$(jq -r ".pendingAssets[$i].url" "$GITHUB_RELEASE_JSON")"
     file_path="${WORK_DIR}/${asset_name}"
     echo "正在下载: $asset_name"
-    curl --fail --silent --show-error --location -H 'User-Agent: macOS-Release-Downloader' \
+    curl --fail --silent --show-error --location --retry 3 --retry-all-errors \
+      --connect-timeout 30 --max-time 1800 \
+      -H 'Accept: application/octet-stream' -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+      -H 'User-Agent: yibiao-release-sync' \
       --output "$file_path" "$asset_url"
     downloaded_files+=("$file_path")
   done
